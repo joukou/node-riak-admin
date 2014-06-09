@@ -32,6 +32,17 @@ riak_admin.bucketType.status( 'n_val_of_2' ).then( function( status ) {
 });
 ```
 
+### Activate
+
+Equivalent of `riak-admin bucket-type activate`
+
+```javascript
+var riak_admin = require( 'riak-admin' )( cmd: 'sudo /usr/sbin/riak-admin' );
+riak_admin.bucketType.activate( 'n_val_of_2' ).then( function( ) {
+
+});
+```
+
 #### Create
 
 Equivalent of `riak-admin bucket-type create`
@@ -39,6 +50,17 @@ Equivalent of `riak-admin bucket-type create`
 ```javascript
 var riak_admin = require( 'riak-admin' )( cmd: 'sudo /usr/sbin/riak-admin' );
 riak_admin.bucketType.create( 'n_val_of_2', props: { n_val: 2 } ).then( function() {
+ # success
+});
+```
+
+#### Update
+
+Equivalent of `riak-admin bucket-type update`
+
+```javascript
+var riak_admin = require( 'riak-admin' )( cmd: 'sudo /usr/sbin/riak-admin' );
+riak_admin.bucketType.update( 'n_val_of_2', props: { allow_mult: false } ).then( function() {
  # success
 });
 ```
