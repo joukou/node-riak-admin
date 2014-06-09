@@ -65,6 +65,11 @@ riak_admin.bucketType.update( 'n_val_of_2', props: { allow_mult: false } ).then(
 });
 ```
 
+## Contributors
+
+[Isaac Johnston](https://github.com/superstructor)
+[Joukou Ltd](https://joukou.com)
+
 ## License
 
 This Source Code Form is subject to the terms of the Mozilla Public License,
