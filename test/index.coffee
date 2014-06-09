@@ -86,8 +86,8 @@ describe 'riak-admin', ->
         )
 
       specify 'is an Error given a failure exit code', ->
-        main.__set__( 'spawn', stubSpawn( [ 'default (active)' ], [ 'There was an error' ], 1 ) )
-        riak_admin.bucketType.list().should.eventually.be.rejectedWith( Error, 'There was an error' )
+        main.__set__( 'spawn', stubSpawn( [ 'default (active)' ], [ 'Node is not running!' ], 1 ) )
+        riak_admin.bucketType.list().should.eventually.be.rejectedWith( Error, 'Node is not running!' )
 
     describe 'status', ->
 
@@ -95,7 +95,7 @@ describe 'riak-admin', ->
         should.exist( riak_admin.bucketType.status )
         riak_admin.bucketType.status.should.be.a( 'function' )
 
-      specify 'is an object of properties for the requested bucket type', ->
+      specify 'is an object of properties for the given bucket type', ->
         spawn = stubSpawn(
           [
             'n_val_of_3 has been created and may be activated\n'
@@ -155,16 +155,71 @@ describe 'riak-admin', ->
         spawn.should.have.been.calledWithMatch( 'sudo /usr/sbin/riak-admin', [ 'bucket-type', 'status', 'n_val_of_2' ] )
         result
 
+      specify 'is an Error given a failure exit code and output to stderr', ->
+        spawn = stubSpawn(
+          [],
+          [ 'Node is not running!' ],
+          1
+        )
+        main.__set__( 'spawn', spawn )
+        result = riak_admin.bucketType.status( 'n_val_of_2' )
+        result.should.eventually.be.rejectedWith( Error, 'Node is not running!' )
+        result
+
+    describe 'activate', ->
+
+      specify 'is defined', ->
+        should.exist( riak_admin.bucketType.activate )
+        riak_admin.bucketType.activate.should.be.a( 'function' )
+
+      specify 'activates the given bucket type', ->
+        spawn = stubSpawn(
+          [ 'n_val_of_2 has been activated' ],
+          [],
+          0
+        )
+        main.__set__( 'spawn', spawn )
+        result = riak_admin.bucketType.activate( 'n_val_of_2' )
+        result.should.eventually.be.fulfilled
+        spawn.should.have.been.calledWithMatch( 'sudo /usr/sbin/riak-admin', [ 'bucket-type', 'activate', 'n_val_of_2' ] )
+        result
+
     describe 'create', ->
 
       specify 'is defined', ->
         should.exist( riak_admin.bucketType.create )
         riak_admin.bucketType.create.should.be.a( 'function' )
 
-      specify 'creates a new bucket type', ->
+      specify 'creates a new bucket type with the given properties', ->
         spawn = stubSpawn( [ 'n_val_of_2 created' ], [], 0 )
         main.__set__( 'spawn', spawn )
         result = riak_admin.bucketType.create( 'n_val_of_2', props: { n_val: 2 } )
         result.should.eventually.be.fulfilled
         spawn.should.have.been.calledWithMatch( 'sudo /usr/sbin/riak-admin', [ 'bucket-type', 'create', 'n_val_of_2', '\'{"props":{"n_val":2}}\'' ] )
+        result
+
+    describe 'update', ->
+
+      specify 'is defined', ->
+        should.exist( riak_admin.bucketType.create )
+        riak_admin.bucketType.create.should.be.a( 'function' )
+
+      specify 'updates the given bucket type with the given properties', ->
+        spawn = stubSpawn( [ 'n_val_of_2 updated' ], [], 0 )
+        main.__set__( 'spawn', spawn )
+        result = riak_admin.bucketType.update( 'n_val_of_2', props: { allow_mult: false } )
+        result.should.eventually.be.fulfilled
+        spawn.should.have.been.calledWithMatch( 'sudo /usr/sbin/riak-admin', [ 'bucket-type', 'update', 'n_val_of_2', '\'{"props":{"allow_mult":false}}\'' ] )
+        result
+
+      xspecify 'is an Error given a failure exit code', ->
+        spawn = stubSpawn(
+          [],
+          [ 'Node is not running!' ],
+          1
+        )
+        main.__set__( 'spawn', spawn )
+        result = riak_admin.bucketType.update( 'n_val_of_2', props: { allow_mult: false } )
+        result.should.eventually.be.rejectedWith( Error, 'Node is not running!' )
+        spawn.should.have.been.calledWithMatch( 'sudo /usr/sbin/riak-admin', [ 'bucket-type', 'update', 'n_val_of_2', '\'{"props":{"allow_mult":false}}\'' ] )
         result

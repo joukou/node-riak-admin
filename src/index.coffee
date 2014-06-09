@@ -91,11 +91,66 @@ module.exports = ( { cmd } ) ->
 
       deferred.promise
 
+    activate: ( name ) ->
+      deferred = Q.defer()
+
+      child = spawn( cmd, [ 'bucket-type', 'activate', name ] )
+
+      stdout = ''
+      stderr = ''
+
+      child.stdout.on( 'data', ( chunk ) ->
+        stdout += chunk
+      )
+
+      child.stderr.on( 'data', ( chunk ) ->
+        stderr += chunk
+      )
+      
+      child.on( 'close', ( code ) ->
+        unless code is 0
+          deferred.reject( new Error( stderr ) )
+          return
+
+        deferred.resolve()
+      )
+
+      deferred.promise
+           
+
     create: ( name, options ) ->
       deferred = Q.defer()
 
       child = spawn( cmd, [
         'bucket-type', 'create', name, "'#{JSON.stringify( options )}'"
+      ] )
+      
+      stdout = ''
+      stderr = ''
+
+      child.stdout.on( 'data', ( chunk ) ->
+        stdout += chunk
+      )
+
+      child.stderr.on( 'data', ( chunk ) ->
+        stderr += chunk
+      )
+
+      child.on( 'close', ( code ) ->
+        unless code is 0
+          deferred.reject( new Error( stderr ) )
+          return
+
+        deferred.resolve()
+      )
+
+      deferred.promise
+
+    update: ( name, options ) ->
+      deferred = Q.defer()
+
+      child = spawn( cmd, [
+        'bucket-type', 'update', name, "'#{JSON.stringify( options )}'"
       ] )
       
       stdout = ''
