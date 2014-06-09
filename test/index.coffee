@@ -89,6 +89,72 @@ describe 'riak-admin', ->
         main.__set__( 'spawn', stubSpawn( [ 'default (active)' ], [ 'There was an error' ], 1 ) )
         riak_admin.bucketType.list().should.eventually.be.rejectedWith( Error, 'There was an error' )
 
+    describe 'status', ->
+
+      specify 'is defined', ->
+        should.exist( riak_admin.bucketType.status )
+        riak_admin.bucketType.status.should.be.a( 'function' )
+
+      specify 'is an object of properties for the requested bucket type', ->
+        spawn = stubSpawn(
+          [
+            'n_val_of_3 has been created and may be activated\n'
+            '\n'
+            'young_vclock: 20\n'
+            'w: quorum\n'
+            'small_vclock: 50\n'
+            'rw: quorum\n'
+            'r: quorum\n'
+            'pw: 0\n'
+            'precommit: []\n'
+            'pr: 0\n'
+            'postcommit: []\n'
+            'old_vclock: 86400\n'
+            'notfound_ok: true\n'
+            'n_val: 3\n'
+            'linkfun: {modfun,riak_kv_wm_link_walker,mapreduce_linkfun}\n'
+            'last_write_wins: false\n'
+            'dw: quorum\n'
+            'dvv_enabled: true\n'
+            'chash_keyfun: {riak_core_util,chash_std_keyfun}\n'
+            'big_vclock: 50\n'
+            'basic_quorum: false\n'
+            'allow_mult: true\n'
+            'active: false\n'
+            'claimant: \'riak@127.0.0.1\'\n'
+          ],
+          [],
+          1 # riak-admin bucket-type status incorrectly returns non-zero exit code
+        )
+        main.__set__( 'spawn', spawn )
+        result = riak_admin.bucketType.status( 'n_val_of_2' )
+        result.should.eventually.deep.equal(
+          young_vclock: 20,
+          w: 'quorum',
+          small_vclock: 50,
+          rw: 'quorum',
+          r: 'quorum',
+          pw: 0,
+          precommit: '[]',
+          pr: 0,
+          postcommit: '[]',
+          old_vclock: 86400,
+          notfound_ok: true,
+          n_val: 3,
+          linkfun: '{modfun,riak_kv_wm_link_walker,mapreduce_linkfun}',
+          last_write_wins: false,
+          dw: 'quorum',
+          dvv_enabled: true,
+          chash_keyfun: '{riak_core_util,chash_std_keyfun}',
+          big_vclock: 50,
+          basic_quorum: false,
+          allow_mult: true,
+          active: false,
+          claimant: '\'riak@127.0.0.1\''
+        )
+        spawn.should.have.been.calledWithMatch( 'sudo /usr/sbin/riak-admin', [ 'bucket-type', 'status', 'n_val_of_2' ] )
+        result
+
     describe 'create', ->
 
       specify 'is defined', ->

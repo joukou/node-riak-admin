@@ -50,6 +50,47 @@ module.exports = ( { cmd } ) ->
 
       deferred.promise
 
+    status: ( name ) ->
+      deferred = Q.defer()
+
+      child = spawn( cmd, [ 'bucket-type', 'status', name ] )
+
+      stdout = ''
+      stderr = ''
+
+      child.stdout.on( 'data', ( chunk ) ->
+        stdout += chunk
+      )
+
+      child.stderr.on( 'data', ( chunk ) ->
+        stderr += chunk
+      )
+      
+      child.on( 'close', ( code ) ->
+        unless code is 0 or code is 1 # TODO exit code is incorrect on status
+          deferred.reject( new Error( stderr ) )
+          return
+
+        props = stdout.match( /^[\w_]+: [\w\[\]\{\},_@'\.]+$/gm )
+        props = _.reduce( props, ( memo, prop, i ) ->
+          [ prop, name, value ] =
+            prop.match( /^([\w_]+): ([\w\[\]\{\},_@'\.]+)$/ )
+    
+          if value is 'true'
+            value = true
+          else if value is 'false'
+            value = false
+          else if /^\d+$/.test( value )
+            value = parseInt( value, 10 )
+          memo[ name ] = value
+          memo
+        , {} )
+
+        deferred.resolve( props )
+      )
+
+      deferred.promise
+
     create: ( name, options ) ->
       deferred = Q.defer()
 
