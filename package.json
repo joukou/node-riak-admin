@@ -20,5 +20,24 @@
   "bugs": {
     "url": "https://github.com/joukou/node-riak-admin/issues"
   },
-  "homepage": "https://github.com/joukou/node-riak-admin"
+  "homepage": "https://github.com/joukou/node-riak-admin",
+  "devDependencies": {
+    "sinon-chai": "2.5.0",
+    "chai-as-promised": "4.1.1",
+    "rewire": "2.0.1",
+    "lazypipe": "0.2.1",
+    "coffee-script": "1.7.1",
+    "gulp-sloc": "1.0.4",
+    "sinon": "1.10.2",
+    "gulp-clean": "0.3.0",
+    "chai": "1.9.1",
+    "gulp-coffeelint": "0.3.3",
+    "gulp-mocha": "0.4.1",
+    "gulp-load-plugins": "0.5.1",
+    "gulp-coffee": "2.0.1",
+    "gulp-istanbul": "0.2.0",
+    "gulp-util": "2.2.16",
+    "gulp-coveralls": "0.1.2",
+    "gulp": "3.7.0"
+  }
 }
