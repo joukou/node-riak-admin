@@ -32,7 +32,7 @@ riak_admin.bucketType.status( 'n_val_of_2' ).then( function( status ) {
 });
 ```
 
-### Activate
+#### Activate
 
 Equivalent of `riak-admin bucket-type activate`
 
