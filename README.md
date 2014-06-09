@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/joukou/node-riak-admin.png?label=ready&title=Ready)](https://waffle.io/joukou/node-riak-admin)
 node-riak-admin
 ===============
 
