@@ -1,6 +1,6 @@
 {
   "name": "riak-admin",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Programmatically use the riak-admin tool for Basho Riak 2.0",
   "main": "lib/index.js",
   "scripts": {
