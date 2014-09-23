@@ -34,7 +34,7 @@ module.exports = ( { cmd } ) ->
 
       child.on( 'close', ( code ) ->
         unless code is 0
-          deferred.reject( new Error( stderr ) )
+          deferred.reject( new Error( stdout + stderr ) )
           return
 
         matches = stdout.match( /^[\w_]+ \((active|not active)\)$/gm )
@@ -68,7 +68,7 @@ module.exports = ( { cmd } ) ->
       
       child.on( 'close', ( code ) ->
         unless code is 0 or code is 1 # TODO exit code is incorrect on status
-          deferred.reject( new Error( stderr ) )
+          deferred.reject( new Error( stdout + stderr ) )
           return
 
         props = stdout.match( /^[\w_]+: [\w\[\]\{\},_@'\.]+$/gm )
@@ -109,7 +109,7 @@ module.exports = ( { cmd } ) ->
       
       child.on( 'close', ( code ) ->
         unless code is 0
-          deferred.reject( new Error( stderr ) )
+          deferred.reject( new Error( stdout + stderr ) )
           return
 
         deferred.resolve()
@@ -138,7 +138,7 @@ module.exports = ( { cmd } ) ->
 
       child.on( 'close', ( code ) ->
         unless code is 0
-          deferred.reject( new Error( stderr ) )
+          deferred.reject( new Error( stdout + stderr ) )
           return
 
         deferred.resolve()
@@ -166,7 +166,7 @@ module.exports = ( { cmd } ) ->
 
       child.on( 'close', ( code ) ->
         unless code is 0
-          deferred.reject( new Error( stderr ) )
+          deferred.reject( new Error( stdout + stderr ) )
           return
 
         deferred.resolve()
